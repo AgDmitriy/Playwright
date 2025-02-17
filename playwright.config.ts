@@ -27,29 +27,26 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL, 
-    //'http://quest:welcome2qauto@qauto.forstudy.space/',
-    httpCredentials: {
-      username: process.env.USER_NAME ? process.env.USER_NAME : '',
-      password: process.env.PASSWORD ? process.env.PASSWORD : '',
-    },
+    baseURL: `https://${process.env.AUTH_LOGIN}:${process.env.AUTH_PASS}@${process.env.BASE_URL}`,
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'retain-on-failure',
-    video: 'retain-on-failure',
-    screenshot: 'on',
+    trace: 'on-first-retry',
   },
+
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'setup', 
       use: { ...devices['Desktop Chrome'] },
+      testMatch: '*setup/*.ts'
     },
-
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
+    
+    {
+      name: 'e2e',
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup']
+    },
 
     // {
     //   name: 'webkit',
